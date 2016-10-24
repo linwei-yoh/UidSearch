@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.uidsearch.MainActivity" >
+    <item
+        android:id="@+id/updata_Page"
+        android:orderInCategory="1"
+        android:title="@string/updata_Setting"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/watch_Page"
+        android:orderInCategory="2"
+        android:title="@string/watch_Setting"
+        app:showAsAction="never"/>
+</menu>
