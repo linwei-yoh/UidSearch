@@ -1,5 +1,8 @@
 package com.example.android.uidsearch;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.uidsearch.uidprovider.UidContract;
 
@@ -76,10 +80,31 @@ public class WatchActivityFragment extends Fragment implements LoaderManager.Loa
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String uid, pw;
+        Cursor elem = (Cursor) mUidAdapter.getItem(info.position);
+
         switch (item.getItemId()){
             case R.id.item_copy:
+                if (elem != null) {
+                    uid = elem.getString(COL_UID);
+                    pw = elem.getString(COL_PW);
+                    ClipboardManager clip = (ClipboardManager) getContext().
+                            getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clipData = ClipData.newPlainText("item-info", uid + " " + pw);
+                    clip.setPrimaryClip(clipData);
+                    Toast.makeText(getContext(), "已复制", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.item_del:
+                if (elem != null) {
+                    String sUidStoreWithUidSel =
+                            UidContract.UidStore.TABLE_NAME + "." + UidContract.UidStore.COLUMN_UID + " = ? ";
+                    uid = elem.getString(COL_UID);
+                    getContext().getContentResolver().delete(
+                            UidContract.UidStore.CONTENT_URI,
+                            sUidStoreWithUidSel,
+                            new String[]{uid});
+                }
                 return true;
             default:
                 return super.onContextItemSelected(item);
